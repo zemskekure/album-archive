@@ -14,8 +14,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        serif: ['"EB Garamond"', 'Georgia', 'serif'],
-        mono: ['"DM Mono"', '"Courier New"', 'monospace'],
+        display: ['"Druk Wide"', '"Arial Black"', 'sans-serif'],
+        body: ['Arial', 'Helvetica', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",

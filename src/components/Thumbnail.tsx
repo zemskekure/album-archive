@@ -1,41 +1,35 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 
 interface ThumbnailProps {
-  frames: string[];
-  metadata?: string;
+  src: string;
+  clip: string;
   className?: string;
-  aspectRatio?: "portrait" | "square";
   delay?: number;
 }
 
 const Thumbnail = ({
-  frames,
-  metadata,
+  src,
+  clip,
   className = "",
-  aspectRatio = "portrait",
   delay = 0,
 }: ThumbnailProps) => {
   const [isHovering, setIsHovering] = useState(false);
-  const [frameIndex, setFrameIndex] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    if (!isHovering || frames.length <= 1) return;
-
-    const interval = setInterval(() => {
-      setFrameIndex((prev) => (prev + 1) % frames.length);
-    }, 220);
-
-    return () => clearInterval(interval);
-  }, [isHovering, frames.length]);
-
-  const handleMouseEnter = useCallback(() => setIsHovering(true), []);
-  const handleMouseLeave = useCallback(() => {
-    setIsHovering(false);
-    setFrameIndex(0);
+  const handleMouseEnter = useCallback(() => {
+    setIsHovering(true);
+    videoRef.current?.play();
   }, []);
 
-  const aspect = aspectRatio === "square" ? "aspect-square" : "aspect-[3/4]";
+  const handleMouseLeave = useCallback(() => {
+    setIsHovering(false);
+    const video = videoRef.current;
+    if (video) {
+      video.pause();
+      video.currentTime = 0;
+    }
+  }, []);
 
   return (
     <motion.div
@@ -49,20 +43,28 @@ const Thumbnail = ({
       onTouchStart={handleMouseEnter}
       onTouchEnd={handleMouseLeave}
     >
-      <div className={`${aspect} w-full overflow-hidden shadow-paper relative`}>
+      <div className="aspect-square w-full overflow-hidden shadow-paper relative">
         <img
-          src={frames[frameIndex]}
+          src={src}
           alt=""
-          className="w-full h-full object-cover transition-opacity duration-200"
+          className={`w-full h-full object-cover transition-opacity duration-300 ${
+            isHovering ? "opacity-0" : "opacity-100"
+          }`}
           draggable={false}
         />
-        <div className="absolute inset-0 bg-foreground/[0.02]" />
+        <video
+          ref={videoRef}
+          src={clip}
+          muted
+          loop
+          playsInline
+          preload="none"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+            isHovering ? "opacity-100" : "opacity-0"
+          }`}
+        />
+        <div className="absolute inset-0 bg-foreground/[0.02] pointer-events-none" />
       </div>
-      {metadata && (
-        <p className="mt-2 text-meta-sm text-muted-foreground opacity-50">
-          {metadata}
-        </p>
-      )}
     </motion.div>
   );
 };
