@@ -33,89 +33,112 @@ const stills = [
 
 const Index = () => {
   return (
-    <main className="min-h-screen bg-background text-foreground selection:bg-accent/10 flex flex-col">
-      {/* Nav */}
-      <nav className="flex justify-between items-start p-6 md:p-8 shrink-0">
-        <motion.div
-          className="text-meta font-medium"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.2 }}
-        >
-          Leto s Monikou
-        </motion.div>
-        <motion.div
-          className="flex gap-6 md:gap-8 text-meta"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.4 }}
-        >
-          <a href="#" className="hover:text-accent transition-colors duration-300">
-            Počúvať
-          </a>
-          <a href="#" className="hover:text-accent transition-colors duration-300">
-            Objednať
-          </a>
-        </motion.div>
-      </nav>
+    <main className="min-h-[200vh] bg-background text-foreground selection:bg-accent/10 relative">
+      {/* Top-left: artist */}
+      <motion.div
+        className="fixed top-0 left-0 p-6 md:p-10 text-meta font-medium z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5, delay: 0.3 }}
+      >
+        Leto s Monikou
+      </motion.div>
 
-      {/* Title */}
-      <div className="px-6 md:px-8 pt-[6vh] md:pt-[10vh] pb-8 md:pb-12 shrink-0">
-        <motion.h1
-          className="font-serif text-xl md:text-2xl tracking-tight"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.2, delay: 0.3 }}
-        >
-          Leto s Monikou{" "}
-          <span className="italic opacity-50">— Cítiť to všetko naraz</span>
-        </motion.h1>
-        <motion.p
-          className="text-meta-sm text-muted-foreground opacity-40 mt-3"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 0.5 }}
-        >
-          A / B — 2026 — Slnko Records
-        </motion.p>
-      </div>
+      {/* Top-right: nav */}
+      <motion.div
+        className="fixed top-0 right-0 p-6 md:p-10 flex gap-8 text-meta z-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5, delay: 0.5 }}
+      >
+        <a href="#" className="hover:text-accent transition-colors duration-500">
+          Počúvať
+        </a>
+        <a href="#" className="hover:text-accent transition-colors duration-500">
+          Objednať
+        </a>
+      </motion.div>
 
-      {/* Horizontal scrolling strip */}
-      <div className="flex-1 flex items-center shrink-0">
-        <div className="w-full overflow-x-auto overflow-y-hidden scrollbar-hide">
-          <div className="flex gap-4 md:gap-5 px-6 md:px-8 py-4 w-max">
+      {/* Title — large serif, positioned asymmetrically in upper area */}
+      <motion.div
+        className="absolute left-6 md:left-10 top-[22vh] md:top-[28vh]"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 2, delay: 0.8 }}
+      >
+        <h1 className="font-serif text-2xl md:text-[2rem] leading-tight tracking-tight">
+          Cítiť to všetko naraz
+        </h1>
+      </motion.div>
+
+      {/* Subtitle / date — far right */}
+      <motion.p
+        className="absolute right-6 md:right-10 top-[24vh] md:top-[30vh] text-meta-sm text-muted-foreground opacity-40"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5, delay: 1.2 }}
+      >
+        2026
+      </motion.p>
+
+      {/* Image strip — horizontal scroll, positioned in the middle-lower zone */}
+      <div className="absolute left-0 right-0 top-[48vh] md:top-[52vh]">
+        <div className="overflow-x-auto overflow-y-hidden scrollbar-hide">
+          <div className="flex items-start gap-6 md:gap-10 px-6 md:px-10 w-max">
             {stills.map((still, i) => (
-              <div key={still.id} className="w-[140px] md:w-[180px] shrink-0">
+              <motion.div
+                key={still.id}
+                className="w-[110px] md:w-[140px] shrink-0"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1.2, delay: 0.6 + i * 0.08 }}
+              >
                 <Thumbnail
                   frames={still.frames}
                   metadata={`IMG_${still.id}`}
                   aspectRatio="square"
-                  delay={0.08 * i}
+                  delay={0}
                 />
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Tracklist */}
+      {/* Tracklist — bottom left, very quiet */}
       <motion.div
-        className="px-6 md:px-8 pt-6 pb-4 shrink-0"
+        className="absolute left-6 md:left-10 bottom-[18vh] md:bottom-[22vh] max-w-[280px]"
         initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 2, delay: 1.5 }}
       >
-        <p className="font-serif text-sm opacity-30 leading-relaxed">
-          Miesta na mape · Tiger · Ha Ha · Zastav · Lament · Odovzdaj sa mi · Asi ma máš · Zvony bijú na poplach
+        <p className="text-meta-sm text-muted-foreground opacity-30 leading-[2]">
+          Miesta na mape<br />
+          Tiger<br />
+          Ha Ha<br />
+          Zastav<br />
+          Lament<br />
+          Odovzdaj sa mi<br />
+          Asi ma máš<br />
+          Zvony bijú na poplach
         </p>
       </motion.div>
 
-      {/* Footer */}
-      <footer className="p-6 md:p-8 flex justify-between text-meta-sm text-muted-foreground opacity-30 shrink-0">
-        <span>© 2026 Leto s Monikou</span>
+      {/* Side A / B marker — bottom right */}
+      <motion.div
+        className="absolute right-6 md:right-10 bottom-[22vh] md:bottom-[26vh] text-meta-sm text-muted-foreground opacity-25"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5, delay: 1.8 }}
+      >
+        A / B
+      </motion.div>
+
+      {/* Footer — pinned to absolute bottom */}
+      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 flex justify-between text-meta-sm text-muted-foreground opacity-20">
+        <span>© 2026</span>
         <span>Slnko Records</span>
-      </footer>
+      </div>
     </main>
   );
 };
