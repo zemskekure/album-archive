@@ -18,127 +18,127 @@ import still14 from "@/assets/stills/still-14.jpg";
 import still15 from "@/assets/stills/still-15.jpg";
 import still16 from "@/assets/stills/still-16.jpg";
 
-const stills = [
-  { frames: [still01, still02, still03], id: "0841" },
-  { frames: [still05, still06, still04], id: "0844" },
-  { frames: [still07, still08, still09], id: "0847" },
-  { frames: [still10, still11, still12], id: "0850" },
-  { frames: [still13, still14, still15], id: "0853" },
-  { frames: [still16, still15, still14], id: "0856" },
-  { frames: [still03, still06, still09], id: "0859" },
-  { frames: [still12, still11, still10], id: "0862" },
-  { frames: [still08, still05, still02], id: "0865" },
-  { frames: [still04, still07, still01], id: "0868" },
+const grid = [
+  [
+    { frames: [still01, still02, still03], id: "0841" },
+    { frames: [still05, still06, still04], id: "0844" },
+    { frames: [still07, still08, still09], id: "0847" },
+    { frames: [still10, still11, still12], id: "0850" },
+    { frames: [still13, still14, still15], id: "0853" },
+    { frames: [still16, still15, still14], id: "0856" },
+  ],
+  [
+    { frames: [still03, still06, still09], id: "0859" },
+    { frames: [still12, still11, still10], id: "0862" },
+    { frames: [still08, still05, still02], id: "0865" },
+    { frames: [still04, still07, still01], id: "0868" },
+    { frames: [still14, still02, still08], id: "0871" },
+    { frames: [still06, still10, still16], id: "0874" },
+  ],
+  [
+    { frames: [still02, still04, still06], id: "0877" },
+    { frames: [still09, still13, still01], id: "0880" },
+    { frames: [still11, still03, still15], id: "0883" },
+    { frames: [still05, still16, still07], id: "0886" },
+    { frames: [still01, still08, still14], id: "0889" },
+    { frames: [still10, still12, still05], id: "0892" },
+  ],
+  [
+    { frames: [still15, still09, still03], id: "0895" },
+    { frames: [still07, still01, still11], id: "0898" },
+    { frames: [still16, still14, still06], id: "0901" },
+    { frames: [still04, still10, still02], id: "0904" },
+    { frames: [still13, still05, still08], id: "0907" },
+    { frames: [still12, still03, still16], id: "0910" },
+  ],
+  [
+    { frames: [still08, still11, still14], id: "0913" },
+    { frames: [still02, still06, still10], id: "0916" },
+    { frames: [still05, still09, still01], id: "0919" },
+    { frames: [still15, still07, still13], id: "0922" },
+    { frames: [still03, still16, still04], id: "0925" },
+    { frames: [still11, still14, still12], id: "0928" },
+  ],
+  [
+    { frames: [still06, still02, still08], id: "0931" },
+    { frames: [still10, still15, still05], id: "0934" },
+    { frames: [still13, still04, still16], id: "0937" },
+    { frames: [still01, still09, still07], id: "0940" },
+    { frames: [still14, still12, still03], id: "0943" },
+    { frames: [still07, still11, still06], id: "0946" },
+  ],
 ];
 
 const Index = () => {
   return (
-    <main className="min-h-[200vh] bg-background text-foreground selection:bg-accent/10 relative">
-      {/* Top-left: artist */}
-      <motion.div
-        className="fixed top-0 left-0 p-6 md:p-10 text-meta font-medium z-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, delay: 0.3 }}
-      >
-        Leto s Monikou
-      </motion.div>
+    <main className="min-h-screen bg-background text-foreground selection:bg-accent/10 relative flex flex-col">
+      {/* Nav */}
+      <nav className="flex justify-between items-start p-6 md:p-10 shrink-0">
+        <motion.span
+          className="text-meta font-medium"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5, delay: 0.2 }}
+        >
+          Leto s Monikou
+        </motion.span>
+        <motion.div
+          className="flex gap-8 text-meta"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5, delay: 0.4 }}
+        >
+          <a href="#" className="hover:text-accent transition-colors duration-500">Počúvať</a>
+          <a href="#" className="hover:text-accent transition-colors duration-500">Objednať</a>
+        </motion.div>
+      </nav>
 
-      {/* Top-right: nav */}
-      <motion.div
-        className="fixed top-0 right-0 p-6 md:p-10 flex gap-8 text-meta z-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, delay: 0.5 }}
-      >
-        <a href="#" className="hover:text-accent transition-colors duration-500">
-          Počúvať
-        </a>
-        <a href="#" className="hover:text-accent transition-colors duration-500">
-          Objednať
-        </a>
-      </motion.div>
-
-      {/* Title — large serif, positioned asymmetrically in upper area */}
-      <motion.div
-        className="absolute left-6 md:left-10 top-[22vh] md:top-[28vh]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2, delay: 0.8 }}
-      >
-        <h1 className="font-serif text-2xl md:text-[2rem] leading-tight tracking-tight">
+      {/* Center content */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 md:px-10">
+        {/* Title above grid */}
+        <motion.h1
+          className="font-serif text-xl md:text-2xl tracking-tight mb-10 md:mb-14"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2, delay: 0.5 }}
+        >
           Cítiť to všetko naraz
-        </h1>
-      </motion.div>
+        </motion.h1>
 
-      {/* Subtitle / date — far right */}
-      <motion.p
-        className="absolute right-6 md:right-10 top-[24vh] md:top-[30vh] text-meta-sm text-muted-foreground opacity-40"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, delay: 1.2 }}
-      >
-        2026
-      </motion.p>
-
-      {/* Image strip — horizontal scroll, positioned in the middle-lower zone */}
-      <div className="absolute left-0 right-0 top-[48vh] md:top-[52vh]">
-        <div className="overflow-x-auto overflow-y-hidden scrollbar-hide">
-          <div className="flex items-start gap-6 md:gap-10 px-6 md:px-10 w-max">
-            {stills.map((still, i) => (
-              <motion.div
-                key={still.id}
-                className="w-[110px] md:w-[140px] shrink-0"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1.2, delay: 0.6 + i * 0.08 }}
-              >
-                <Thumbnail
-                  frames={still.frames}
-                  metadata={`IMG_${still.id}`}
-                  aspectRatio="square"
-                  delay={0}
-                />
-              </motion.div>
-            ))}
-          </div>
+        {/* 6×6 grid */}
+        <div className="grid grid-cols-6 gap-[6px] md:gap-2 w-full max-w-[520px]">
+          {grid.flat().map((still, i) => (
+            <motion.div
+              key={still.id}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.3 + i * 0.02 }}
+            >
+              <Thumbnail
+                frames={still.frames}
+                aspectRatio="square"
+                delay={0}
+              />
+            </motion.div>
+          ))}
         </div>
+
+        {/* Tracklist below grid */}
+        <motion.p
+          className="mt-10 md:mt-14 text-meta-sm text-muted-foreground opacity-30 text-center leading-[2.2] max-w-[360px]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2, delay: 1.2 }}
+        >
+          Miesta na mape · Tiger · Ha Ha · Zastav · Lament · Odovzdaj sa mi · Asi ma máš · Zvony bijú na poplach
+        </motion.p>
       </div>
 
-      {/* Tracklist — bottom left, very quiet */}
-      <motion.div
-        className="absolute left-6 md:left-10 bottom-[18vh] md:bottom-[22vh] max-w-[280px]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2, delay: 1.5 }}
-      >
-        <p className="text-meta-sm text-muted-foreground opacity-30 leading-[2]">
-          Miesta na mape<br />
-          Tiger<br />
-          Ha Ha<br />
-          Zastav<br />
-          Lament<br />
-          Odovzdaj sa mi<br />
-          Asi ma máš<br />
-          Zvony bijú na poplach
-        </p>
-      </motion.div>
-
-      {/* Side A / B marker — bottom right */}
-      <motion.div
-        className="absolute right-6 md:right-10 bottom-[22vh] md:bottom-[26vh] text-meta-sm text-muted-foreground opacity-25"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5, delay: 1.8 }}
-      >
-        A / B
-      </motion.div>
-
-      {/* Footer — pinned to absolute bottom */}
-      <div className="absolute bottom-0 left-0 right-0 p-6 md:p-10 flex justify-between text-meta-sm text-muted-foreground opacity-20">
+      {/* Footer */}
+      <footer className="flex justify-between p-6 md:p-10 text-meta-sm text-muted-foreground opacity-20 shrink-0">
         <span>© 2026</span>
         <span>Slnko Records</span>
-      </div>
+      </footer>
     </main>
   );
 };
