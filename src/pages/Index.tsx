@@ -23,7 +23,7 @@ const Index = () => {
     <main className="min-h-screen bg-background text-foreground selection:bg-accent/10">
       {/* Nav */}
       <nav className="flex justify-between items-start p-6 md:p-8">
-        <    motion.div
+        <motion.div
           className="text-meta font-medium"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
