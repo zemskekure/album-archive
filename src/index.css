@@ -98,6 +98,14 @@
     font-family: var(--font-mono);
   }
 
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   .text-meta {
     font-size: 10px;
     letter-spacing: 0.15em;
