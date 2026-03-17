@@ -1,6 +1,10 @@
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useColorMode } from "@/hooks/ColorModeContext";
+import Footer from "@/components/Footer";
+import { usePlayerState } from "@/hooks/PlayerContext";
+import MiniPlayer from "@/components/MiniPlayer";
 
 const sideA = [
   {
@@ -310,136 +314,134 @@ Je náš`,
   },
 ];
 
-const SideSection = ({
-  label,
-  songs,
-  startDelay,
-}: {
-  label: string;
-  songs: typeof sideA;
-  startDelay: number;
-}) => (
-  <>
-    <motion.div
-      className="flex justify-center mb-6"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1.5, delay: startDelay }}
-    >
-      <span className="inline-flex items-center justify-center w-[16px] h-[16px] rounded-full border border-current text-[6px] font-display font-bold">
-        {label}
-      </span>
-    </motion.div>
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 md:gap-x-12 gap-y-10 md:gap-y-14 text-center">
-      {songs.map((song, i) => (
-        <motion.div
-          key={song.title}
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: startDelay + 0.1 + i * 0.1 }}
-        >
-          <h2 className="font-display font-bold uppercase text-[11px] md:text-[13px] tracking-[0.02em] mb-2">
-            {song.title}
-          </h2>
-          <p className="font-body text-[10px] md:text-[11px] leading-[1.35] tracking-[-0.01em] whitespace-pre-line opacity-90">
-            {song.text}
-          </p>
-        </motion.div>
-      ))}
-    </div>
-  </>
+const allSongs = [...sideA, ...sideB];
+
+const SongCard = ({ song, index }: { song: typeof allSongs[0]; index: number }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 12 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 1, delay: 0.1 + index * 0.05 }}
+    className="text-center"
+  >
+    <h2 className="font-display font-bold uppercase text-[13px] md:text-[15px] tracking-[0.02em] mb-2">
+      {song.title}
+    </h2>
+    <p className="font-body text-[12px] md:text-[13px] leading-[1.4] tracking-[-0.01em] whitespace-pre-line opacity-90">
+      {song.text}
+    </p>
+  </motion.div>
 );
 
 const Lyrics = () => {
   const { toggle } = useColorMode();
+  const { hasPlayed } = usePlayerState();
+  const [mobileIndex, setMobileIndex] = useState(0);
+  const mobilePrev = () => setMobileIndex((p) => (p > 0 ? p - 1 : allSongs.length - 1));
+  const mobileNext = () => setMobileIndex((p) => (p < allSongs.length - 1 ? p + 1 : 0));
   return (
     <main className="min-h-screen bg-background text-foreground selection:bg-accent/10 relative flex flex-col">
       {/* Nav */}
-      <nav className="flex justify-between items-baseline px-4 py-4 md:px-10 md:py-8 shrink-0 gap-3">
+      <nav className="flex justify-between items-baseline px-6 py-4 md:px-10 md:py-8 shrink-0 gap-3">
         <Link to="/">
           <motion.span
-            className="text-[7px] md:text-[10px] tracking-[0.12em] uppercase font-display font-medium whitespace-nowrap opacity-70 hover:opacity-100 transition-opacity duration-500"
+            className="text-[9px] md:text-[10px] tracking-[0.10em] uppercase font-display font-medium whitespace-nowrap opacity-70 hover:opacity-100 transition-opacity duration-500"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.7 }}
             transition={{ duration: 1.5, delay: 0.2 }}
           >
-            Leto s Monikou
+          Leto s Monikou
           </motion.span>
         </Link>
         <motion.div
-          className="flex gap-3 md:gap-8 text-[7px] md:text-[10px] tracking-[0.12em] uppercase font-display font-medium shrink-0"
+          className="flex items-baseline gap-3 md:gap-8 text-[9px] md:text-[10px] tracking-[0.10em] uppercase font-display font-medium shrink-0"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.5, delay: 0.4 }}
         >
-          <a href="#" className="opacity-70 hover:opacity-100 transition-opacity duration-500">
+          <Link to="/#player" className="opacity-70 hover:opacity-100 transition-opacity duration-500">
             Počúvať
-          </a>
-          <a href="#" className="opacity-70 hover:opacity-100 transition-opacity duration-500">
+          </Link>
+          <Link to="/#objednat" className="opacity-70 hover:opacity-100 transition-opacity duration-500">
             Objednať
-          </a>
+          </Link>
           <Link to="/texty" className="hover:opacity-70 transition-opacity duration-500">
             Texty
           </Link>
-          <button
-            onClick={toggle}
-            className="w-[10px] h-[10px] md:w-[12px] md:h-[12px] rounded-full bg-current opacity-50 hover:opacity-100 transition-opacity duration-500 shrink-0"
-            aria-label="Toggle colors"
-          />
         </motion.div>
       </nav>
 
-      {/* Lyrics content */}
-      <div className="flex-1 px-6 md:px-10 pt-6 md:pt-12 pb-12 md:pb-20 max-w-[900px] mx-auto w-full">
-        <SideSection label="A" songs={sideA} startDelay={0.3} />
-        <div className="my-12 md:my-20" />
-        <SideSection label="B" songs={sideB} startDelay={0.6} />
+      {/* Mobile: single song with arrows */}
+      <div className="md:hidden flex-1 flex flex-col pt-4 pb-8 px-6">
+        {/* Navigation arrows + counter */}
+        <div className="flex justify-between items-center mb-6">
+          <button onClick={mobilePrev} className="opacity-40 hover:opacity-100 transition-opacity p-2">
+            <svg width="14" height="16" viewBox="0 0 8 10" fill="currentColor">
+              <rect x="0" y="0" width="1.5" height="10" />
+              <polygon points="8,0 8,10 2,5" />
+            </svg>
+          </button>
+          <span className="font-display font-bold text-[8px] tracking-[0.10em] uppercase opacity-40">
+            {mobileIndex + 1} / {allSongs.length}
+          </span>
+          <button onClick={mobileNext} className="opacity-40 hover:opacity-100 transition-opacity p-2">
+            <svg width="14" height="16" viewBox="0 0 8 10" fill="currentColor">
+              <polygon points="0,0 6,5 0,10" />
+              <rect x="6.5" y="0" width="1.5" height="10" />
+            </svg>
+          </button>
+        </div>
 
-        {/* Credits */}
-        <motion.div
-          className="mt-16 md:mt-24 pt-8 border-t border-foreground/20 font-body text-[8px] md:text-[9px] leading-[2.2] opacity-70 text-center max-w-[500px] mx-auto"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.7 }}
-          transition={{ duration: 2, delay: 1 }}
-        >
-          <div className="grid grid-cols-[auto_auto] gap-x-3 justify-center text-left">
-            <span className="text-right opacity-60">Hudba a texty</span>
-            <span>Monika Omerzu Midriaková</span>
-            <span className="text-right opacity-60">Produkcia</span>
-            <span>Monika Omerzu Midriaková</span>
-            <span className="text-right opacity-60">Mix a mastering</span>
-            <span>Gaex</span>
-          </div>
-          <div className="grid grid-cols-[auto_auto] gap-x-3 justify-center text-left mt-4">
-            <span className="text-right opacity-60">Spev, synths, programming</span>
-            <span>Monika Omerzu Midriaková</span>
-            <span className="text-right opacity-60">Bicie</span>
-            <span>Jakub Šindler</span>
-            <span className="text-right opacity-60">Gitara</span>
-            <span>Lukáš Klavrza</span>
-            <span className="text-right opacity-60">Basa</span>
-            <span>Lukáš Klavrza</span>
-            <span className="text-right opacity-60">Doprovodný spev</span>
-            <span>Amelie Siba</span>
-          </div>
-          <div className="grid grid-cols-[auto_auto] gap-x-3 justify-center text-left mt-4">
-            <span className="text-right opacity-60">Vizuálny koncept</span>
-            <span>Jumping Jacks</span>
-            <span className="text-right opacity-60">Grafický dizajn</span>
-            <span>Šimon Marek</span>
-            <span className="text-right opacity-60">PR</span>
-            <span>Zdeněk Neusar, Alexander Čerevka</span>
-            <span className="text-right opacity-60">Booking</span>
-            <span>Prokop Holoubek, Alžbeta Holičková</span>
-          </div>
-        </motion.div>
+        {/* Song content */}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={mobileIndex}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="flex-1"
+          >
+            <SongCard song={allSongs[mobileIndex]} index={mobileIndex} />
+          </motion.div>
+        </AnimatePresence>
+
       </div>
 
-      {/* Footer */}
-      <footer className="flex justify-between px-6 py-6 md:p-10 text-[9px] text-foreground opacity-30 shrink-0 font-body tracking-wide">
-        <span>© 2026</span>
-        <span>Slnko Records</span>
-      </footer>
+      {/* Desktop: 4-column grid */}
+      <div className="hidden md:block flex-1 px-10 pt-10 pb-20 max-w-[1200px] mx-auto w-full">
+        <motion.div
+          className="flex justify-center mb-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5, delay: 0.3 }}
+        >
+          <span className="inline-flex items-center justify-center w-[22px] h-[22px] rounded-full border border-current text-[9px] font-display font-bold">A</span>
+        </motion.div>
+        <div className="grid grid-cols-4 gap-x-16 gap-y-14 text-center">
+          {sideA.map((song, i) => (
+            <SongCard key={song.title} song={song} index={i} />
+          ))}
+        </div>
+        <div className="my-20" />
+        <motion.div
+          className="flex justify-center mb-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1.5, delay: 0.6 }}
+        >
+          <span className="inline-flex items-center justify-center w-[22px] h-[22px] rounded-full border border-current text-[9px] font-display font-bold">B</span>
+        </motion.div>
+        <div className="grid grid-cols-4 gap-x-16 gap-y-14 text-center">
+          {sideB.map((song, i) => (
+            <SongCard key={song.title} song={song} index={i + 4} />
+          ))}
+        </div>
+      </div>
+
+      <Footer />
+
+      {/* Persistent mini player — only if user has played something */}
+      {hasPlayed && <MiniPlayer />}
     </main>
   );
 };
